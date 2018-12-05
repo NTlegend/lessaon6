@@ -16,44 +16,37 @@ global.db = mysql.createConnection({
 global.db.query = util.promisify(global.db.query);
 
 // Открыть с БД и вывести в консоль суествующего пользователя с машинами
-console.log(User.load(1));
-console.log(User.loadAll());
+//User.load(1);
+//User.loadAll();
 
 // Создать нового пользователя
 const user = new User();
-user.first_name = 'Alexey';
-user.last_name = 'Bobrov';
+user.first_name = 'Ivan';
+user.last_name = 'Fedorov';
 user.age = '42';
 user.gender = 'M';
 
-// Изменить имя пользователю
-const user_id = user.save();
-user.first_name = 'Dmitriy';
-user.save(user_id);
+const userPromise = user.save();
+
+userPromise.then((res) => {
+    // Изменить имя пользователю
+    user.first_name = 'Dmitriy';
+    user.save(user.id);
+    return res;
+});
 
 // Добавить пользователю новую машину
-const car = new Car();
-car.user_id = user_id;
-car.model = 'volga';
-car.year = '1998';
-const car_id = car.save();
+userPromise.then((res) => {
+    const car = new Car();
+    car.user_id = user.id;
+    car.model = 'bmw';
+    car.year = '2018';
+    car.save();
+    return res;
+});
 
 // Удалить пользователя
-
-
-// Закрываем соединение с базой
-global.db.end();
-
-/*
-
-Нужно реадизовать паттерн ActiveRecord, а именно в файле model.js нужно написать методы:
-load - получение экземпляра одной строки с БД по первичному ключу
-loadAll - получение массива экземпляров класса
-save - сохранение в БД (если PK не задан - то создание, иначе - обновление)
-delete - удаление с БД
-
-эти методы должны быть универсальны, чтобы один и тот же код корректно работал для обоих моделей  User и Car.
-
-Полученый код нужно зхакомитить и запушить в git репозиторий и присылайте мне ссылочку. желательно коммиты делать поэтапно.
-
-*/
+userPromise.then((res) => {
+    user.delete(user.id);
+    return res;
+});

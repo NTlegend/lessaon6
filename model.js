@@ -1,30 +1,35 @@
 class Model {
 
-    static load(pk) {
-        global.db.query('SELECT * FROM ?? WHERE id = ?', [this.table(), pk], function (error, results) {
-            if (error) {
+    static load(id) {
+        const sql = 'SELECT * FROM ?? WHERE id = ?';
+        return global.db.query(sql, [this.table(), id])
+            .then((results) => {
+                console.log(results);
+                return results;
+            })
+            .catch((error) => {
                 console.log(error.message);
                 throw error;
-            }
-            console.log(results);
-            return results;
-        });
+            });
     }
 
     static loadAll() {
-        global.db.query('SELECT * FROM ??', this.table(), function (error, results) {
-            if (error) {
+        const sql = 'SELECT * FROM ??';
+        return global.db.query(sql, [this.table()])
+            .then((results) => {
+                console.log(results);
+                return results;
+            })
+            .catch((error) => {
                 console.log(error.message);
                 throw error;
-            }
-            console.log(results);
-            return results;
-        });
+            });
     }
 
-    save(pk = null) {
+    save(id = null) {
         const table = this.constructor.table();
         let inserts = {};
+
         if (table === 'users') {
             inserts = {
                 first_name: this.first_name,
@@ -33,37 +38,53 @@ class Model {
                 gender: this.gender
             };
         }
+
         if (table === 'cars') {
             inserts = {
-                user_id: pk,
+                user_id: this.user_id,
                 model: this.model,
                 year: this.year
             };
         }
 
-        if (pk === null) {
+        if (id === null) {
             const sql = 'INSERT INTO ?? SET ?';
-            global.db.query(sql, [table, inserts], function (error, results) {
-                if (error) {
+            return global.db.query(sql, [table, inserts])
+                .then((results) => {
+                    console.log('inserted id: ' + results.insertId);
+                    this.id = results.insertId;
+                    return results;
+                })
+                .catch((error) => {
                     console.log(error.message);
                     throw error;
-                }
-                console.log(results.insertId);
-                this.pk = results.insertId;
-                return results.insertId;
-            });
+                });
         } else {
             const sql = 'UPDATE ?? SET ? WHERE id = ?';
-            global.db.query(sql, [table, inserts, pk], function (error, results) {
-                if (error) {
+            return global.db.query(sql, [table, inserts, id])
+                .then((results) => {
+                    console.log('changed id: ' + id);
+                    return results;
+                })
+                .catch((error) => {
                     console.log(error.message);
                     throw error;
-                }
-                console.log('changed user id' + pk);
-                return pk;
-            });
+                });
         }
-        global.db.end();
+    }
+
+    delete(id) {
+        const table = this.constructor.table();
+        const sql = 'DELETE FROM ?? WHERE id = ?';
+        return global.db.query(sql, [table, id])
+            .then((results) => {
+                console.log(results);
+                return results;
+            })
+            .catch((error) => {
+                console.log(error.message);
+                throw error;
+            });
     }
 }
 
