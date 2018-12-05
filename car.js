@@ -1,16 +1,12 @@
 const Model = require('./model');
 
 class Car extends Model {
-  static table() {
-    return 'cars';
-  }
-
-  constructor() {
-    this.pk = 'id';
-    this.fields = ['id', 'user_id', 'model', 'year'];
-
-    super();
-  }
+    static table() {
+        return 'cars';
+    }
 }
 
-module.exports = User;
+Car.pk = 'id';
+Car.fields = ['id', 'user_id', 'model', 'year'];
+
+module.exports = Car;
