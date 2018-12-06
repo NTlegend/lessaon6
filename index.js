@@ -24,9 +24,18 @@ let user = new User();
 user.load(1);
 user.loadAll();
 
-// Создать нового пользователя
+let user1 = new User();
+user1.first_name='John7999';
+user1.last_name='John777';
+user1.age=25;
+user1.gender='M';
+user1.save();
 
 // Изменить имя пользователю
+let user2 = new User();
+user2.id=5;
+user2.first_name='Andrew';
+user2.save();
 
 // Удалить пользователя
 
