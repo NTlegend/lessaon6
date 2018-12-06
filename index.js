@@ -38,5 +38,12 @@ user2.first_name='Andrew';
 user2.save();
 
 // Удалить пользователя
+user.delete(14);
 
 // Добавить пользователю новую машину
+carFields = {'user_id': 15, 'model': 'Tesla', 'year': 2018};
+let car1 = new Car();
+car1.user_id=15;
+car1.model='Tesla222';
+car1.year=2019;
+car1.save();
