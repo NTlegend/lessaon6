@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "dotenv": "6.1.0",
-    "mysql": "2.15.0"
+    "mysql": "2.15.0",
+    "nodaemon": "0.0.5"
   }
 }
